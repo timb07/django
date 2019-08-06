@@ -40,7 +40,8 @@ class BaseHandler:
                 if getattr(middleware, "_is_async", False):
                     mw_instance = middleware(handler)
                 else:
-                    logger.debug('Synchronous middleware adapted: %r', middleware_path)
+                    if settings.DEBUG:
+                        logger.debug('Synchronous middleware adapted: %r', middleware_path)
                     mw_instance = middleware(async_to_sync(handler))
             except MiddlewareNotUsed as exc:
                 if settings.DEBUG:
