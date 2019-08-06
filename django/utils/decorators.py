@@ -156,12 +156,8 @@ def async_middleware(func):
     """
     Mark a middleware factory as returning an async middleware.
     """
-    @wraps(func)
-    def wrapper(request):
-        return func(request)
-
-    wrapper._is_async = True
-    return wrapper
+    func._is_async = True
+    return func
 
 
 class classproperty:
