@@ -152,6 +152,18 @@ def make_middleware_decorator(middleware_class):
     return _make_decorator
 
 
+def async_middleware(func):
+    """
+    Mark a middleware factory as returning an async middleware.
+    """
+    @wraps(func)
+    def wrapper(request):
+        return func(request)
+
+    wrapper._is_async = True
+    return wrapper
+
+
 class classproperty:
     def __init__(self, method=None):
         self.fget = method

@@ -37,9 +37,9 @@ class BaseHandler:
         for middleware_path in reversed(settings.MIDDLEWARE):
             middleware = import_string(middleware_path)
             try:
-                mw_instance = middleware(handler)
-                # If they gave us back a synchronous middleware, re-construct with a synchronous handler
-                if not asyncio.iscoroutinefunction(mw_instance):
+                if getattr(middleware, "_is_async", False):
+                    mw_instance = middleware(handler)
+                else:
                     logger.debug('Synchronous middleware adapted: %r', middleware_path)
                     mw_instance = middleware(async_to_sync(handler))
             except MiddlewareNotUsed as exc:
